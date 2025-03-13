@@ -139,6 +139,9 @@ def model_specific_tool_parse(response: str, model_name: str) -> tuple[str, list
         else:
             content = response
             function_calls = []
+    elif "xlam" in model_name:
+        function_calls, content = parse_agent_action_xlam(response)
+
     else:
         try:
             function_calls, content = parse_unknown_tool_calls(response)
@@ -147,6 +150,25 @@ def model_specific_tool_parse(response: str, model_name: str) -> tuple[str, list
                 f"Unsupported model: {model_name}. No tool parsing implemented. Check if any of the current parsings work with your tool calling conventions and add the model name to the correct elif block."
             )
     return content, function_calls
+
+
+def parse_agent_action_xlam(agent_action: str):
+    """
+    Given an agent's action, parse it to add to conversation history
+    """
+    try: parsed_agent_action_json = json.loads(agent_action)
+    except: return "", []
+    
+    if "thought" not in parsed_agent_action_json.keys(): thought = ""
+    else: thought = parsed_agent_action_json["thought"]
+    
+    if "tool_calls" not in parsed_agent_action_json.keys(): tool_calls = []
+    else: tool_calls = parsed_agent_action_json["tool_calls"]
+
+    function_calls = [json.dumps(tool_call) for tool_call in tool_calls]
+    remaining_content = str(thought)
+    
+    return function_calls, remaining_content
 
 
 def json_extract(raw_string: str) -> tuple[list[str], str]:

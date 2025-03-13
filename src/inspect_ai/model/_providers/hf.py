@@ -260,7 +260,8 @@ class HuggingFaceAPI(ModelAPI):
                 tools_list = tools_to_mistral_format(tools_list)
             elif "qwen" in self.model_name.lower():
                 hf_messages = inspect_tools_to_string(hf_messages)
-
+            elif "xlam" in self.model_name.lower():
+                hf_messages = messages_to_xlam_format(hf_messages, tools_list)
         # apply chat template
         if self.tokenizer.chat_template is not None:
             chat = self.tokenizer.apply_chat_template(
@@ -275,6 +276,72 @@ class HuggingFaceAPI(ModelAPI):
                 chat += f"{message.role}: {message.content}\n"
         # return
         return cast(str, chat)
+
+def parse_agent_action(agent_action: str):
+    """
+    Given an agent's action, parse it to add to conversation history
+    """
+    try: parsed_agent_action_json = json.loads(agent_action)
+    except: return "", []
+    
+    if "thought" not in parsed_agent_action_json.keys(): thought = ""
+    else: thought = parsed_agent_action_json["thought"]
+    
+    if "tool_calls" not in parsed_agent_action_json.keys(): tool_calls = []
+    else: tool_calls = parsed_agent_action_json["tool_calls"]
+    
+    return thought, tool_calls
+
+def messages_to_xlam_format(messages: list[ChatMessage], tools: list[dict[str, Any]]) -> list[ChatMessage]:
+    """Convert messages to the format required for XLam."""
+    xlam_tools = tools_to_xlam_format(tools)
+    parsed_history = []
+    i = 1
+    sys_prompt = ''
+    for message in messages:
+        thought = ""
+        tool_calls = []
+        next_observation = ""
+        user_input = ""
+        if message.role == "assistant":
+            thought = message.content
+            for tool_call in message.tool_calls:
+                if tool_call.parse_error is not None:
+                    tool_calls.append({"name": tool_call.function, "arguments": tool_call.arguments, "parse_error": tool_call.parse_error})
+                else:
+                    tool_calls.append({"name": tool_call.function, "arguments": tool_call.arguments})
+        elif message.role == "tool":
+            next_observation += f"Tool Response: {message.function} : {message.content}\n"
+        elif message.role == "system":
+            user_input = message.content
+            user_input = user_input.replace("[function_list]", json.dumps(xlam_tools, indent=2))
+            user_input = user_input.replace("[query]", messages[1].content)
+            sys_prompt = user_input
+            continue
+        elif message.role == "user":
+            continue
+        
+        parsed_history.append({
+            "step_id": i,
+            "thought": thought,
+            "tool_calls": tool_calls,
+            "next_observation": next_observation,
+            "user_input": user_input
+        })
+        next_observation = ""
+        thought = ""
+        tool_calls = []
+        user_input = ""
+        i += 1
+
+    history_str = sys_prompt + "\n\n" + "[BEGIN OF HISTORY STEPS]\n" + json.dumps(parsed_history, indent=2) + "\n[END OF HISTORY STEPS]"
+    xlam_messages = [
+        {
+            "role": "user",
+            "content": history_str
+        }
+    ]
+    return xlam_messages
 
 
 def shorten_tool_id(messages: list[ChatMessage]) -> list[ChatMessage]:
@@ -309,6 +376,20 @@ def tools_to_mistral_format(tools: list[dict[str, Any]]) -> list[dict[str, Any]]
             }
         )
     return mistral_tools
+
+
+def tools_to_xlam_format(tools: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Convert tools to the format required for XLam."""
+    xlam_tools = []
+    for tool in tools:
+        xlam_tools.append(
+            {
+                "name": tool["name"],
+                "description": tool["description"],
+                "parameters": {k: v for k, v in tool["parameters"].get("properties", {}).items()},
+            }
+        )
+    return xlam_tools
 
 
 def inspect_tools_to_string(messages: list[ChatMessage]) -> list[ChatMessage]:
@@ -461,7 +542,7 @@ def process_batches() -> None:
             with torch.inference_mode():
                 generation_outputs = cast(
                     ModelGenerateOutput,
-                    generator(input_ids=input_ids, attention_mask=attention_mask),
+                    generator(input_ids=input_ids, attention_mask=attention_mask, do_sample=False),
                 )
                 generate_ids = generation_outputs.sequences
                 logits = generation_outputs.logits
