@@ -99,7 +99,7 @@ class HuggingFaceAPI(ModelAPI):
             self.device = "cpu"
 
         # model
-        self.model = AutoModelForCausalLM.from_pretrained(model_path, device_map=self.device, token=self.api_key, **model_args)
+        self.model = AutoModelForCausalLM.from_pretrained(model_path, device_map="auto", token=self.api_key, **model_args)
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
 
