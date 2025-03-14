@@ -178,6 +178,7 @@ class HuggingFaceAPI(ModelAPI):
                 batch_size=config.max_connections or self.max_connections(),
             )
         )
+        print(f"response: {response}")
 
         # gather logprobs
         final_logprobs = None
