@@ -168,6 +168,7 @@ class HuggingFaceAPI(ModelAPI):
         )
 
         # generate (uses a queue to batch so we await)
+        print(f"chat: {chat}")
         response = await batched_generate(
             GenerateInput(
                 input=chat,
