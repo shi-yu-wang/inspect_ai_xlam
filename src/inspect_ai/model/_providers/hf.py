@@ -368,11 +368,12 @@ def tools_to_xlam_format(tools: list[dict[str, Any]]) -> list[dict[str, Any]]:
     xlam_tools = []
     for tool in tools:
         xlam_tools.append(
-            {
+            {"type": "function",
+             "function": {
                 "name": tool["name"],
                 "description": tool["description"],
                 "parameters": {k: v for k, v in tool["parameters"].get("properties", {}).items()},
-            }
+            }}
         )
     return xlam_tools
 
