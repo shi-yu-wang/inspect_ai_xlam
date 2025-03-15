@@ -194,6 +194,7 @@ class HuggingFaceAPI(ModelAPI):
             )
         )
         print(f"response: {response}")
+        print(abc)
         # gather logprobs
         final_logprobs = None
         if config.logprobs is not None:
