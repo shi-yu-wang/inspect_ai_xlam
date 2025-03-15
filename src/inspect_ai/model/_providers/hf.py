@@ -545,6 +545,7 @@ def process_batches() -> None:
 
             # decode
             generated_tokens = generate_ids[:, input_ids.size(dim=1) :]
+            print(f"generated_tokens: {generated_tokens}")
             if logprobs is not None:
                 assert logprobs.shape[1] == generated_tokens.shape[1]
             outputs = decoder(sequences=generated_tokens)
