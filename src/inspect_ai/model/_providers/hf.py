@@ -517,6 +517,7 @@ def process_batches() -> None:
             first_input = inputs[0][0]
             device = first_input.device
             tokenizer = first_input.tokenizer
+            print(f"tokenizer: {tokenizer}")
             generator = first_input.generator
             decoder = first_input.decoder
 
