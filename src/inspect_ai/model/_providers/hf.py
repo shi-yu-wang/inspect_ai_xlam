@@ -168,7 +168,7 @@ class HuggingFaceAPI(ModelAPI):
         )
 
         # generate (uses a queue to batch so we await)
-        print(f"chat: {chat}")
+        # print(f"chat: {chat}")
         response = await batched_generate(
             GenerateInput(
                 input=chat,
@@ -179,7 +179,7 @@ class HuggingFaceAPI(ModelAPI):
                 batch_size=config.max_connections or self.max_connections(),
             )
         )
-        print(f"response: {response}")
+        # print(f"response: {response}")
 
         # gather logprobs
         final_logprobs = None
@@ -507,6 +507,8 @@ def process_batches() -> None:
                 break
 
         # see if we have any work to do
+        print(f"input: {inputs}")
+        print(len(inputs))
         if len(inputs) == 0:
             continue
 
