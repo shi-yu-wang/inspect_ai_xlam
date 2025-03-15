@@ -507,8 +507,7 @@ def process_batches() -> None:
                 break
 
         # see if we have any work to do
-        print(f"input: {inputs}")
-        print(len(inputs))
+
         if len(inputs) == 0:
             continue
 
@@ -526,6 +525,7 @@ def process_batches() -> None:
             input_ids = tokenized_inputs["input_ids"]
             attention_mask = tokenized_inputs["attention_mask"]
             input_ids = input_ids.to(device)
+            print(f"input id: {input_ids}")
             attention_mask = attention_mask.to(device)
 
             # generate
