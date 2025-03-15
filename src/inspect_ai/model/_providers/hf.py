@@ -548,7 +548,7 @@ def process_batches() -> None:
             if logprobs is not None:
                 assert logprobs.shape[1] == generated_tokens.shape[1]
             outputs = decoder(sequences=generated_tokens)
-
+            print(f"outputs: {outputs}")
             # call back futures
             total_time = time.monotonic() - start_time
             for i, output in enumerate(outputs):
