@@ -418,6 +418,7 @@ def chat_completion_assistant_message(
     handler: ChatAPIHandler | None,
     model_name: str,
 ) -> ChatMessageAssistant:
+    print(f"response: {response}")
     if handler:
         return handler.parse_assistant_response(response.output, tools)
     else:
