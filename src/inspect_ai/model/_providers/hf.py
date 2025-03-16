@@ -347,9 +347,14 @@ def messages_to_xlam_format(messages: list[ChatMessage], tools: list[dict[str, A
         xlam_messages = [
             {
                 "role": "system",
+                "content": "According to user's message that may contain historical conversations, reply accordingly."
+            },
+            {
+                "role": "user",
                 "content": history_str
             }
         ]
+    print(f"xlam_messages: {xlam_messages}")
     return xlam_messages
 
 
