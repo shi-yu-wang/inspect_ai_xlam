@@ -308,9 +308,9 @@ def messages_to_xlam_format(messages: list[ChatMessage], tools: list[dict[str, A
             user_input = user_input.replace("[query]", messages[1].content)
             sys_prompt = user_input
             continue
-        elif i==len(messages) and message.role == "user":
-            user_input_final = message.content
-            continue
+        # elif i==len(messages) and message.role == "user":
+        #     user_input_final = message.content
+        #     continue
             
         parsed_history.append({
             "step_id": i,
@@ -330,16 +330,26 @@ def messages_to_xlam_format(messages: list[ChatMessage], tools: list[dict[str, A
     # else:
     #     history_str = sys_prompt + "\n\n" + "[BEGIN OF HISTORY STEPS]\n" + json.dumps(parsed_history, indent=2) + "\n[END OF HISTORY STEPS]"
     history_str = sys_prompt + "\n\n" + "[BEGIN OF HISTORY STEPS]\n" + json.dumps(parsed_history, indent=2) + "\n[END OF HISTORY STEPS]"
-    xlam_messages = [
-        {
-            "role": "system",
-            "content": history_str
-        },
-        {
-            "role": "user",
-            "content": user_input_final
-        }
-    ]
+    message = messages[-1]
+    if message.role == "user":
+        user_input_final = message.content
+        xlam_messages = [
+            {
+                "role": "system",
+                "content": history_str
+            },
+            {
+                "role": "user",
+                "content": user_input_final
+            }
+        ]
+    else:
+        xlam_messages = [
+            {
+                "role": "system",
+                "content": history_str
+            }
+        ]
     return xlam_messages
 
 
