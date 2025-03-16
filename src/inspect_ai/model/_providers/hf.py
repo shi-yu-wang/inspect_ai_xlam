@@ -354,7 +354,7 @@ def messages_to_xlam_format(messages: list[ChatMessage], tools: list[dict[str, A
                 "content": history_str
             }
         ]
-    print(f"xlam_messages: {xlam_messages}")
+    print(f"xlam_messages: {xlam_messages}\n messages: {messages}")
     return xlam_messages
 
 
