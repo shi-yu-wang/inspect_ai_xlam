@@ -168,7 +168,7 @@ class HuggingFaceAPI(ModelAPI):
         )
 
         # generate (uses a queue to batch so we await)
-        print(f"chat: {chat}")
+        # print(f"chat: {chat}")
         response = await batched_generate(
             GenerateInput(
                 input=chat,
@@ -527,7 +527,7 @@ def process_batches() -> None:
             decoder = first_input.decoder
 
             # tokenize and move to device
-            # print(f"input list: {[item[0].input for item in inputs]}")
+            print(f"input list: {[item[0].input for item in inputs]}")
             tokenized_inputs = tokenizer([item[0].input for item in inputs])
             input_ids = tokenized_inputs["input_ids"]
             attention_mask = tokenized_inputs["attention_mask"]
