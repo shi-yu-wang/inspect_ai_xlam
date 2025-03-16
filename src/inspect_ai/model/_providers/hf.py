@@ -327,7 +327,7 @@ def messages_to_xlam_format(messages: list[ChatMessage], tools: list[dict[str, A
         {
             "role": "system",
             "content": "You are an expert in composing functions. You are given a question and a set of possible functions. \nBased on the question, you will need to make one or more function/tool calls to achieve the purpose. \nIf none of the functions can be used, point it out and refuse to answer. \nIf the given question lacks the parameters required by the function, also point it out."
-        }
+        },
         {
             "role": "user",
             "content": history_str
