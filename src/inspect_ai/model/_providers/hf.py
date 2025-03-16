@@ -179,7 +179,7 @@ class HuggingFaceAPI(ModelAPI):
                 batch_size=config.max_connections or self.max_connections(),
             )
         )
-        print(f"response: {response}")
+        # print(f"response: {response}")
 
         # gather logprobs
         final_logprobs = None
@@ -250,6 +250,7 @@ class HuggingFaceAPI(ModelAPI):
             elif "xlam" in self.model_name.lower():
                 hf_messages = messages_to_xlam_format(hf_messages, tools_list)
         # apply chat template
+        print(f"tools: {tools_to_xlam_format(tools_list)}")
         if self.tokenizer.chat_template is not None:
             chat = self.tokenizer.apply_chat_template(
                 hf_messages,
