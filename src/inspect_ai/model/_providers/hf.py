@@ -252,6 +252,7 @@ class HuggingFaceAPI(ModelAPI):
         # apply chat template
         print(f"tools: {tools_to_xlam_format(tools_list)}")
         if self.tokenizer.chat_template is not None:
+            print(f"messages: {hf_messages}")
             chat = self.tokenizer.apply_chat_template(
                 hf_messages,
                 add_generation_prompt=True,
