@@ -181,7 +181,7 @@ class HuggingFaceAPI(ModelAPI):
             skip_special_tokens=True,
             clean_up_tokenization_spaces=False,
         )
-        print(f"chat: {chat}")
+        # print(f"chat: {chat}")
         # generate (uses a queue to batch so we await)
         response = await batched_generate(
             GenerateInput(
@@ -193,7 +193,7 @@ class HuggingFaceAPI(ModelAPI):
                 batch_size=config.max_connections or self.max_connections(),
             )
         )
-        print(f"response: {response}")
+        # print(f"response: {response}")
         # print(abc)
         # gather logprobs
         final_logprobs = None
@@ -533,7 +533,7 @@ def process_batches() -> None:
             decoder = first_input.decoder
 
             # tokenize and move to device
-            print(f"token inputs: {[item[0].input for item in inputs]}")
+            # print(f"token inputs: {[item[0].input for item in inputs]}")
             tokenized_inputs = tokenizer([item[0].input for item in inputs])
             input_ids = tokenized_inputs["input_ids"]
             attention_mask = tokenized_inputs["attention_mask"]
@@ -560,7 +560,7 @@ def process_batches() -> None:
             if logprobs is not None:
                 assert logprobs.shape[1] == generated_tokens.shape[1]
             outputs = decoder(sequences=generated_tokens)
-
+            print(f"output: {outputs}")
             # call back futures
             total_time = time.monotonic() - start_time
             for i, output in enumerate(outputs):
