@@ -179,7 +179,7 @@ class HuggingFaceAPI(ModelAPI):
                 batch_size=config.max_connections or self.max_connections(),
             )
         )
-        # print(f"response: {response}")
+        print(f"response: {response}")
 
         # gather logprobs
         final_logprobs = None
@@ -286,7 +286,7 @@ def messages_to_xlam_format(messages: list[ChatMessage], tools: list[dict[str, A
     i = 1
     sys_prompt = ''
     for message in messages:
-        print(message)
+        # print(message)
         thought = ""
         tool_calls = []
         next_observation = ""
