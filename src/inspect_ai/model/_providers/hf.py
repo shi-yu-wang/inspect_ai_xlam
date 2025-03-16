@@ -255,7 +255,7 @@ class HuggingFaceAPI(ModelAPI):
                 hf_messages,
                 add_generation_prompt=True,
                 tokenize=False,
-                tools=tools_list if len(tools_list) > 0 else None,
+                tools=tools_to_xlam_format(tools_list) if len(tools_list) > 0 else None
             )
         else:
             chat = ""
