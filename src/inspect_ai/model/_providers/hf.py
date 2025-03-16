@@ -518,17 +518,17 @@ def process_batches() -> None:
             first_input = inputs[0][0]
             device = first_input.device
             tokenizer = first_input.tokenizer
-            print(f"tokenizer: {tokenizer}")
+            # print(f"tokenizer: {tokenizer}")
             generator = first_input.generator
             decoder = first_input.decoder
 
             # tokenize and move to device
-            print(f"input list: {[item[0].input for item in inputs]}")
+            # print(f"input list: {[item[0].input for item in inputs]}")
             tokenized_inputs = tokenizer([item[0].input for item in inputs])
             input_ids = tokenized_inputs["input_ids"]
             attention_mask = tokenized_inputs["attention_mask"]
             input_ids = input_ids.to(device)
-            print(f"input id: {input_ids}")
+            # print(f"input id: {input_ids}")
             attention_mask = attention_mask.to(device)
 
             # generate
@@ -548,11 +548,11 @@ def process_batches() -> None:
 
             # decode
             generated_tokens = generate_ids[:, input_ids.size(dim=1) :]
-            print(f"generated_tokens: {generated_tokens}")
+            # print(f"generated_tokens: {generated_tokens}")
             if logprobs is not None:
                 assert logprobs.shape[1] == generated_tokens.shape[1]
             outputs = decoder(sequences=generated_tokens)
-            print(f"outputs: {outputs}")
+            # print(f"outputs: {outputs}")
             # call back futures
             total_time = time.monotonic() - start_time
             for i, output in enumerate(outputs):
