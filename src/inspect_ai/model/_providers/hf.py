@@ -79,7 +79,6 @@ class HuggingFaceAPI(ModelAPI):
             return value
 
         device = collect_model_arg("device")
-        tokenizer = collect_model_arg("tokenizer")
         model_path = "/fsx/sfr/xlam/checkpoints/llama/sft/zuxin/0305-llama-3.1-70b-gorilla_mt_json-retail_eval-retailv1-retailv2-airline-airlinev3-toolbench-apibank-mbpp-humaneval-glaive-webarena-hotpot-openhermes-lr5e-6-bs1-ga5-sample30k-epoch1.5"
         tokenizer_path = "/fsx/sfr/xlam/checkpoints/llama/sft/zuxin/0305-llama-3.1-70b-gorilla_mt_json-retail_eval-retailv1-retailv2-airline-airlinev3-toolbench-apibank-mbpp-humaneval-glaive-webarena-hotpot-openhermes-lr5e-6-bs1-ga5-sample30k-epoch1.5"
         self.batch_size = collect_model_arg("batch_size")
@@ -94,7 +93,7 @@ class HuggingFaceAPI(ModelAPI):
         elif torch.backends.mps.is_available():
             self.device = "mps"
         elif torch.cuda.is_available():
-            self.device = "cuda:0"
+            self.device = "cuda"
         else:
             self.device = "cpu"
 
