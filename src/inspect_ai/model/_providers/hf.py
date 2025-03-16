@@ -178,7 +178,7 @@ class HuggingFaceAPI(ModelAPI):
                 batch_size=config.max_connections or self.max_connections(),
             )
         )
-        print(f"response: {response}")
+        # print(f"response: {response}")
 
         # gather logprobs
         final_logprobs = None
@@ -354,7 +354,7 @@ def messages_to_xlam_format(messages: list[ChatMessage], tools: list[dict[str, A
                 "content": history_str
             }
         ]
-    print(f"xlam_messages: {xlam_messages}\n messages: {messages}")
+    # print(f"xlam_messages: {xlam_messages}\n messages: {messages}")
     return xlam_messages
 
 
@@ -431,6 +431,7 @@ def chat_completion_assistant_message(
     handler: ChatAPIHandler | None,
     model_name: str,
 ) -> ChatMessageAssistant:
+    print(f"response: {response}")
     if handler:
         return handler.parse_assistant_response(response.output, tools)
     else:
