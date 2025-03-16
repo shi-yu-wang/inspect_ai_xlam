@@ -258,6 +258,7 @@ class HuggingFaceAPI(ModelAPI):
                 tokenize=False,
                 tools=tools_to_xlam_format(tools_list) if len(tools_list) > 0 else None
             )
+            print(f"chat: {chat}")
         else:
             chat = ""
             for message in hf_messages:
@@ -528,7 +529,7 @@ def process_batches() -> None:
             decoder = first_input.decoder
 
             # tokenize and move to device
-            print(f"input list: {[item[0].input for item in inputs]}")
+            # print(f"input list: {[item[0].input for item in inputs]}")
             tokenized_inputs = tokenizer([item[0].input for item in inputs])
             input_ids = tokenized_inputs["input_ids"]
             attention_mask = tokenized_inputs["attention_mask"]
