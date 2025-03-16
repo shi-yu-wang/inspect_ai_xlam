@@ -181,7 +181,7 @@ class HuggingFaceAPI(ModelAPI):
             skip_special_tokens=True,
             clean_up_tokenization_spaces=False,
         )
-        # print(f"chat: {chat}")
+        print(f"chat: {chat}")
         # generate (uses a queue to batch so we await)
         response = await batched_generate(
             GenerateInput(
@@ -193,8 +193,8 @@ class HuggingFaceAPI(ModelAPI):
                 batch_size=config.max_connections or self.max_connections(),
             )
         )
-        # print(f"response: {response}")
-        # print(abc)
+        print(f"response: {response}")
+        print(abc)
         # gather logprobs
         final_logprobs = None
         if config.logprobs is not None:
