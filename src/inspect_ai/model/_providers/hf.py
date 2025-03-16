@@ -250,16 +250,16 @@ class HuggingFaceAPI(ModelAPI):
             elif "xlam" in self.model_name.lower():
                 hf_messages = messages_to_xlam_format(hf_messages, tools_list)
         # apply chat template
-        print(f"tools: {tools_to_xlam_format(tools_list)}")
+        # print(f"tools: {tools_to_xlam_format(tools_list)}")
         if self.tokenizer.chat_template is not None:
-            print(f"messages: {hf_messages}")
+            # print(f"messages: {hf_messages}")
             chat = self.tokenizer.apply_chat_template(
                 hf_messages,
                 add_generation_prompt=True,
                 tokenize=False,
                 tools=tools_to_xlam_format(tools_list) if len(tools_list) > 0 else None
             )
-            print(f"chat: {chat}")
+            # print(f"chat: {chat}")
         else:
             chat = ""
             for message in hf_messages:
@@ -559,7 +559,7 @@ def process_batches() -> None:
             if logprobs is not None:
                 assert logprobs.shape[1] == generated_tokens.shape[1]
             outputs = decoder(sequences=generated_tokens)
-            # print(f"outputs: {outputs}")
+            print(f"outputs: {outputs}")
             # call back futures
             total_time = time.monotonic() - start_time
             for i, output in enumerate(outputs):
