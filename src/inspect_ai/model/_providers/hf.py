@@ -286,6 +286,7 @@ def messages_to_xlam_format(messages: list[ChatMessage], tools: list[dict[str, A
     i = 1
     sys_prompt = ''
     for message in messages:
+        print(message)
         thought = ""
         tool_calls = []
         next_observation = ""
