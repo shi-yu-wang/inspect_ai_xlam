@@ -178,7 +178,7 @@ class HuggingFaceAPI(ModelAPI):
                 batch_size=config.max_connections or self.max_connections(),
             )
         )
-        # print(f"response: {response}")
+        print(f"chat: {chat}\n response: {response}")
 
         # gather logprobs
         final_logprobs = None
@@ -578,7 +578,7 @@ def process_batches() -> None:
             if logprobs is not None:
                 assert logprobs.shape[1] == generated_tokens.shape[1]
             outputs = decoder(sequences=generated_tokens)
-            print(f"outputs: {outputs}")
+            # print(f"outputs: {outputs}")
             # call back futures
             total_time = time.monotonic() - start_time
             for i, output in enumerate(outputs):
