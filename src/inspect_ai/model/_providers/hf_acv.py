@@ -308,9 +308,10 @@ def messages_to_xlam_format(messages: list[ChatMessage], tools: list[dict[str, A
             user_input = user_input.replace("[query]", messages[1].content)
             sys_prompt = user_input
             continue
-        elif message.role == "user":
+        elif i==len(messages) and message.role == "user":
+            user_input_final = message.content
             continue
-        
+            
         parsed_history.append({
             "step_id": i,
             "thought": thought,
@@ -324,18 +325,19 @@ def messages_to_xlam_format(messages: list[ChatMessage], tools: list[dict[str, A
         user_input = ""
         i += 1
 
-    if not parsed_history:
-        history_str = sys_prompt + "\n\n" + "[BEGIN OF HISTORY STEPS]\n" + json.dumps(parsed_history, indent=2) + "\n[END OF HISTORY STEPS] Can you help me?"
-    else:
-        history_str = sys_prompt + "\n\n" + "[BEGIN OF HISTORY STEPS]\n" + json.dumps(parsed_history, indent=2) + "\n[END OF HISTORY STEPS]"
+    # if not parsed_history:
+    #     history_str = sys_prompt + "\n\n" + "[BEGIN OF HISTORY STEPS]\n" + json.dumps(parsed_history, indent=2) + "\n[END OF HISTORY STEPS] Can you help me?"
+    # else:
+    #     history_str = sys_prompt + "\n\n" + "[BEGIN OF HISTORY STEPS]\n" + json.dumps(parsed_history, indent=2) + "\n[END OF HISTORY STEPS]"
+    history_str = sys_prompt + "\n\n" + "[BEGIN OF HISTORY STEPS]\n" + json.dumps(parsed_history, indent=2) + "\n[END OF HISTORY STEPS]"
     xlam_messages = [
         {
             "role": "system",
-            "content": "You are an expert in composing functions. You are given a question and a set of possible functions. \nBased on the question, you will need to make one or more function/tool calls to achieve the purpose. \nIf none of the functions can be used, point it out and refuse to answer. \nIf the given question lacks the parameters required by the function, also point it out."
+            "content": history_str
         },
         {
             "role": "user",
-            "content": history_str
+            "content": user_input_final
         }
     ]
     return xlam_messages
