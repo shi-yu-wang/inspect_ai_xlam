@@ -432,8 +432,11 @@ def chat_completion_assistant_message(
     model_name: str,
 ) -> ChatMessageAssistant:
     print(f"response: {response}")
-    if isinstance(json.loads(response.output), list):
-        response.output = json.dumps(json.loads(response.output)[0])
+    try:
+        if isinstance(json.loads(response.output), list):
+            response.output = json.dumps(json.loads(response.output)[0])
+    except:
+        response.output = response.output
     if handler:
         return handler.parse_assistant_response(response.output, tools)
     else:
