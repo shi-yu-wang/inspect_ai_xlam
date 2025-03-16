@@ -432,10 +432,12 @@ def chat_completion_assistant_message(
     model_name: str,
 ) -> ChatMessageAssistant:
     print(f"response: {response}")
-    # if handler:
-    #     return handler.parse_assistant_response(response.output, tools)
-    # else:
-    return ChatMessageAssistant(content=response.output, source="generate")
+    if isinstance(response.output, list):
+        response.output = response.output[0]
+    if handler:
+        return handler.parse_assistant_response(response.output, tools)
+    else:
+        return ChatMessageAssistant(content=response.output, source="generate")
 
 
 def set_random_seeds(seed: int | None = None) -> None:
