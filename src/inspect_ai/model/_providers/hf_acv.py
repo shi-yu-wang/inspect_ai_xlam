@@ -325,7 +325,10 @@ def messages_to_xlam_format(messages: list[ChatMessage], tools: list[dict[str, A
         user_input = ""
         i += 1
 
-    history_str = sys_prompt + "\n\n" + "[BEGIN OF HISTORY STEPS]\n" + json.dumps(parsed_history, indent=2) + "\n[END OF HISTORY STEPS]"
+    if not parsed_history:
+        history_str = sys_prompt + "\n\n" + "[BEGIN OF HISTORY STEPS]\n" + json.dumps(parsed_history, indent=2) + "\n[END OF HISTORY STEPS] Can you help me?"
+    else:
+        history_str = sys_prompt + "\n\n" + "[BEGIN OF HISTORY STEPS]\n" + json.dumps(parsed_history, indent=2) + "\n[END OF HISTORY STEPS]"
     xlam_messages = [
         {
             "role": "system",
