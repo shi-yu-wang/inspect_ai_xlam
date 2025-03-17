@@ -159,7 +159,13 @@ def parse_agent_action_xlam(agent_action: str):
     try: parsed_agent_action_json = json.loads(agent_action)
     except: return "", []
 
-    if isinstance(parsed_agent_action_json, list):
+    if not parsed_agent_action_json:
+        return "", []
+
+    if len(parsed_agent_action_json) == 2:
+        parsed_agent_action_json = {"thought": parsed_agent_action_json[0]["thought"],
+                                   "tool_calls": parsed_agent_action_json[1]}
+    elif isinstance(parsed_agent_action_json, list):
         parsed_agent_action_json = {"tool_calls": parsed_agent_action_json[0]}
     
     if "thought" not in parsed_agent_action_json.keys(): thought = ""
