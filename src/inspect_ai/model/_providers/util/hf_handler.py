@@ -17,7 +17,23 @@ logger = getLogger(__name__)
 
 # Hugging Face handler currently supports LLama, Mistral and Qwen models, but will
 # work with any model that uses the same tool calling conventions
+def fix_brackets(s: str) -> str:
+    open_curly = s.count('{')
+    close_curly = s.count('}')
+    open_square = s.count('[')
+    close_square = s.count(']')
 
+    # If we have more '{' than '}', append enough '}'
+    while close_curly < open_curly:
+        s += '}'
+        close_curly += 1
+
+    # If we have more '[' than ']', append enough ']'
+    while close_square < open_square:
+        s += ']'
+        close_square += 1
+
+    return s
 
 class HFHandler(ChatAPIHandler):
     def __init__(self, model_name: str) -> None:
@@ -36,6 +52,7 @@ class HFHandler(ChatAPIHandler):
         content, tool_calls_content = model_specific_tool_parse(
             response, self.model_name
         )
+        print(f"content: {content}, tool_calls: {tool_calls_content}")
         # if there are tool calls proceed with parsing
         if len(tool_calls_content) > 0:
             # parse each tool call (if there are parsing error that occur
@@ -156,18 +173,31 @@ def parse_agent_action_xlam(agent_action: str):
     """
     Given an agent's action, parse it to add to conversation history
     """
+    agent_action = fix_brackets(agent_action)
     try: parsed_agent_action_json = json.loads(agent_action)
     except: return "", []
 
     if not parsed_agent_action_json:
         return "", []
-
-    if len(parsed_agent_action_json) == 2:
-        parsed_agent_action_json = {"thought": parsed_agent_action_json[0]["thought"],
-                                   "tool_calls": parsed_agent_action_json[1]}
-    elif isinstance(parsed_agent_action_json, list):
-        parsed_agent_action_json = {"tool_calls": parsed_agent_action_json[0]}
-    
+        
+    if isinstance(parsed_agent_action_json, list):
+        if len(parsed_agent_action_json) == 1:
+            if "thought" not in parsed_agent_action_json[0].keys():
+                parsed_agent_action_json = {"tool_calls": parsed_agent_action_json[0]}
+            else:
+                parsed_agent_action_json = parsed_agent_action_json[0]
+        else:
+            parsed_agent_action_json_tmp = {}
+            parsed_agent_action_json_tmp["tool_calls"] = []
+            for res in parsed_agent_action_json:
+                if "tool_calls" in res.keys():
+                    parsed_agent_action_json_tmp["tool_calls"].append(res["tool_calls"])
+                elif "thought" in res.keys():
+                    parsed_agent_action_json_tmp["thought"] = res["thought"]
+                else:
+                    parsed_agent_action_json_tmp["thought"] = next(iter(res.values()))
+            parsed_agent_action_json = parsed_agent_action_json_tmp
+                    
     if "thought" not in parsed_agent_action_json.keys(): thought = ""
     else: thought = parsed_agent_action_json["thought"]
     
