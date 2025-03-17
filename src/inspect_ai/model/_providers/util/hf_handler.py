@@ -173,6 +173,8 @@ def parse_agent_action_xlam(agent_action: str):
     """
     Given an agent's action, parse it to add to conversation history
     """
+    if agent_action[-6:] == "}}]}}]":
+        agent_action = agent_action[:-3] + "]"
     agent_action = fix_brackets(agent_action)
     try: parsed_agent_action_json = json.loads(agent_action)
     except: return "", []
