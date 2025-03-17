@@ -80,8 +80,9 @@ class HuggingFaceAPI(ModelAPI):
 
         device = collect_model_arg("device")
         tokenizer = collect_model_arg("tokenizer")
-        model_path = collect_model_arg("model_path")
-        tokenizer_path = collect_model_arg("tokenizer_path")
+        model_path = "/fsx/sfr/xlam/checkpoints/llama/sft/zuxin/0305-llama-3.1-70b-gorilla_mt_json-retail_eval-retailv1-retailv2-airline-airlinev3-toolbench-apibank-mbpp-humaneval-glaive-webarena-hotpot-openhermes-lr5e-6-bs1-ga5-sample30k-epoch1.5"
+        tokenizer_path = "/fsx/sfr/xlam/checkpoints/llama/sft/zuxin/0305-llama-3.1-70b-gorilla_mt_json-retail_eval-retailv1-retailv2-airline-airlinev3-toolbench-apibank-mbpp-humaneval-glaive-webarena-hotpot-openhermes-lr5e-6-bs1-ga5-sample30k-epoch1.5"
+        self.batch_size = collect_model_arg("batch_size")
         self.batch_size = collect_model_arg("batch_size")
         self.chat_template = collect_model_arg("chat_template")
         self.tokenizer_call_args = collect_model_arg("tokenizer_call_args")
@@ -99,25 +100,18 @@ class HuggingFaceAPI(ModelAPI):
             self.device = "cpu"
 
         # model
-        if model_path:
-            self.model = AutoModelForCausalLM.from_pretrained(
-                model_path, device_map=self.device, token=self.api_key, **model_args
-            )
-        else:
-            self.model = AutoModelForCausalLM.from_pretrained(
-                model_name, device_map=self.device, token=self.api_key, **model_args
-            )
-
-        # tokenizer
-        if tokenizer:
-            self.tokenizer = AutoTokenizer.from_pretrained(tokenizer)
-        elif model_path:
-            if tokenizer_path:
-                self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
-            else:
-                self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-        else:
-            self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model = AutoModelForCausalLM.from_pretrained(model_path, device_map="auto", token=self.api_key, **model_args)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+        # # tokenizer
+        # if tokenizer:
+        #     self.tokenizer = AutoTokenizer.from_pretrained(tokenizer)
+        # elif model_path:
+        #     if tokenizer_path:
+        #         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
+        #     else:
+        #         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+        # else:
+        #     self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         # LLMs generally don't have a pad token and we need one for batching
         self.tokenizer.pad_token = self.tokenizer.eos_token
         self.tokenizer.padding_side = "left"
