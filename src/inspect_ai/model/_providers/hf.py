@@ -283,7 +283,7 @@ def parse_agent_action(agent_action: str):
 
 def messages_to_xlam_format(messages: list[ChatMessage], tools: list[dict[str, Any]]) -> list[ChatMessage]:
     """Convert messages to the format required for XLam."""
-    print(f"messages: {messages}")
+    # print(f"messages: {messages}")
     xlam_tools = tools_to_xlam_format(tools)
     parsed_history = []
     i = 1
@@ -432,12 +432,12 @@ def chat_completion_assistant_message(
     handler: ChatAPIHandler | None,
     model_name: str,
 ) -> ChatMessageAssistant:
-    print(f"response: {response}")
-    try:
-        if isinstance(json.loads(response.output), list):
-            response.output = json.dumps(json.loads(response.output)[0])
-    except:
-        response.output = response.output
+    # print(f"response: {response}")
+    # try:
+    #     if isinstance(json.loads(response.output), list):
+    #         response.output = json.dumps(json.loads(response.output)[0])
+    # except:
+    #     response.output = response.output
     if handler:
         return handler.parse_assistant_response(response.output, tools)
     else:
