@@ -52,7 +52,7 @@ class HFHandler(ChatAPIHandler):
         content, tool_calls_content = model_specific_tool_parse(
             response, self.model_name
         )
-        print(f"content: {content}, tool_calls: {tool_calls_content}")
+        print(f"response: {response}, content: {content}, tool_calls: {tool_calls_content}")
         # if there are tool calls proceed with parsing
         if len(tool_calls_content) > 0:
             # parse each tool call (if there are parsing error that occur
