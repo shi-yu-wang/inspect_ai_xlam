@@ -5,6 +5,8 @@ from logging import getLogger
 from shortuuid import uuid
 from typing_extensions import override
 
+from json_repair import repair_json
+
 from inspect_ai.tool._tool_call import ToolCall
 from inspect_ai.tool._tool_info import ToolInfo
 
@@ -17,23 +19,6 @@ logger = getLogger(__name__)
 
 # Hugging Face handler currently supports LLama, Mistral and Qwen models, but will
 # work with any model that uses the same tool calling conventions
-def fix_brackets(s: str) -> str:
-    open_curly = s.count('{')
-    close_curly = s.count('}')
-    open_square = s.count('[')
-    close_square = s.count(']')
-
-    # If we have more '{' than '}', append enough '}'
-    while close_curly < open_curly:
-        s += '}'
-        close_curly += 1
-
-    # If we have more '[' than ']', append enough ']'
-    while close_square < open_square:
-        s += ']'
-        close_square += 1
-
-    return s
 
 class HFHandler(ChatAPIHandler):
     def __init__(self, model_name: str) -> None:
@@ -173,9 +158,9 @@ def parse_agent_action_xlam(agent_action: str):
     """
     Given an agent's action, parse it to add to conversation history
     """
-    if agent_action[-6:] == "}}]}}]":
-        agent_action = agent_action[:-3] + "]"
-    agent_action = fix_brackets(agent_action)
+    # if agent_action[-6:] == "}}]}}]":
+    #     agent_action = agent_action[:-6]
+    agent_action = repair_json(agent_action)
     try: parsed_agent_action_json = json.loads(agent_action)
     except: return "", []
 
@@ -199,7 +184,13 @@ def parse_agent_action_xlam(agent_action: str):
                 else:
                     parsed_agent_action_json_tmp["thought"] = next(iter(res.values()))
             parsed_agent_action_json = parsed_agent_action_json_tmp
-                    
+    if isinstance(parsed_agent_action_json, dict):
+        if "thought" not in parsed_agent_action_json.keys():
+            if "parameters" or "arguments" in parsed_agent_action_json.keys():
+                parsed_agent_action_json_tmp = {}
+                parsed_agent_action_json_tmp["tool_calls"] = []
+                parsed_agent_action_json_tmp["tool_calls"].append(parsed_agent_action_json)
+                parsed_agent_action_json = parsed_agent_action_json_tmp
     if "thought" not in parsed_agent_action_json.keys(): thought = ""
     else: thought = parsed_agent_action_json["thought"]
     
