@@ -162,10 +162,10 @@ def parse_agent_action_xlam(agent_action: str):
     #     agent_action = agent_action[:-6]
     agent_action = repair_json(agent_action)
     try: parsed_agent_action_json = json.loads(agent_action)
-    except: return "", []
+    except: return [], ""
 
     if not parsed_agent_action_json:
-        return "", []
+        return [], ""
         
     if isinstance(parsed_agent_action_json, list):
         if len(parsed_agent_action_json) == 1:
