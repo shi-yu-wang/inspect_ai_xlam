@@ -34,6 +34,7 @@ class HFHandler(ChatAPIHandler):
         prompt that asks the model to use the <tool_call>...</tool_call> syntax)
         """
         # extract tool calls
+        print(f"response_prev: {response}")
         content, tool_calls_content = model_specific_tool_parse(
             response, self.model_name
         )
@@ -158,6 +159,7 @@ def parse_agent_action_xlam(agent_action: str):
     """
     Given an agent's action, parse it to add to conversation history
     """
+    # agent_action: [{"name": "query_google_search", "arguments": {"request": "YouTube ASMR channels"}}]
     # if agent_action[-6:] == "}}]}}]":
     #     agent_action = agent_action[:-6]
     agent_action = repair_json(agent_action)
@@ -181,16 +183,20 @@ def parse_agent_action_xlam(agent_action: str):
                     parsed_agent_action_json_tmp["tool_calls"].append(res["tool_calls"])
                 elif "thought" in res.keys():
                     parsed_agent_action_json_tmp["thought"] = res["thought"]
+                elif "name" in res.keys():
+                    parsed_agent_action_json_tmp["tool_calls"].append(res)
                 else:
                     parsed_agent_action_json_tmp["thought"] = next(iter(res.values()))
             parsed_agent_action_json = parsed_agent_action_json_tmp
+            
     if isinstance(parsed_agent_action_json, dict):
         if "thought" not in parsed_agent_action_json.keys():
-            if "parameters" or "arguments" in parsed_agent_action_json.keys():
+            if "parameters" in parsed_agent_action_json.keys() or "arguments" in parsed_agent_action_json.keys():
                 parsed_agent_action_json_tmp = {}
                 parsed_agent_action_json_tmp["tool_calls"] = []
                 parsed_agent_action_json_tmp["tool_calls"].append(parsed_agent_action_json)
-                parsed_agent_action_json = parsed_agent_action_json_tmp
+                parsed_agent_action_json["tool_calls"] = parsed_agent_action_json_tmp
+                
     if "thought" not in parsed_agent_action_json.keys(): thought = ""
     else: thought = parsed_agent_action_json["thought"]
     
