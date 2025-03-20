@@ -206,7 +206,7 @@ def parse_agent_action_xlam(agent_action: str):
                 parsed_agent_action_json_tmp = {}
                 parsed_agent_action_json_tmp["tool_calls"] = []
                 parsed_agent_action_json_tmp["tool_calls"].append(parsed_agent_action_json)
-                parsed_agent_action_json["tool_calls"] = parsed_agent_action_json_tmp
+                parsed_agent_action_json = parsed_agent_action_json_tmp
                 
     if "thought" not in parsed_agent_action_json.keys(): thought = ""
     else: thought = parsed_agent_action_json["thought"]
