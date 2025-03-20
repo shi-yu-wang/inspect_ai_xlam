@@ -163,6 +163,10 @@ def parse_agent_action_xlam(agent_action: str):
     # if agent_action[-6:] == "}}]}}]":
     #     agent_action = agent_action[:-6]
     print(f"agent_action: {agent_action}")
+    if agent_action[0] != "[" and agent_action[0] != "{":
+        try: parsed_agent_action_json = json.loads(agent_action)
+        except: return [], agent_action
+            
     agent_action = repair_json(agent_action)
     try: parsed_agent_action_json = json.loads(agent_action)
     except: return [], agent_action
