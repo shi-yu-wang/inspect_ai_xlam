@@ -59,7 +59,7 @@ class HFHandler(ChatAPIHandler):
         # otherwise this is just an ordinary assistant message
         else:
             return ChatMessageAssistant(
-                content=filter_assistant_header(response), source="generate"
+                content=content, source="generate"
             )
 
 
