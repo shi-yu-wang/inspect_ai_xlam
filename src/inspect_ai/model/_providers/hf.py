@@ -112,8 +112,8 @@ class HuggingFaceAPI(ModelAPI):
             return value
 
         device = collect_model_arg("device")
-        model_path = "/fsx/sfr/xlam/checkpoints/llama/sft/zuxin/0305-llama-3.1-70b-gorilla_mt_json-retail_eval-retailv1-retailv2-airline-airlinev3-toolbench-apibank-mbpp-humaneval-glaive-webarena-hotpot-openhermes-lr5e-6-bs1-ga5-sample30k-epoch1.5"
-        tokenizer_path = "/fsx/sfr/xlam/checkpoints/llama/sft/zuxin/0305-llama-3.1-70b-gorilla_mt_json-retail_eval-retailv1-retailv2-airline-airlinev3-toolbench-apibank-mbpp-humaneval-glaive-webarena-hotpot-openhermes-lr5e-6-bs1-ga5-sample30k-epoch1.5"
+        model_path = "/fsx/sfr/xlam/checkpoints/llama/sft/zuxin/0316-llama-3.1-70b-gorilla_mt_json-airline_eval-retail_eval-retailv1-retailv2-retailv3-airline_eval-airline-toolbench-apibank-mbpp-humaneval-webarena-airline-lr5e-6-bs1-ga5-sample30k-epoch1.8"
+        tokenizer_path = "/fsx/sfr/xlam/checkpoints/llama/sft/zuxin/0316-llama-3.1-70b-gorilla_mt_json-airline_eval-retail_eval-retailv1-retailv2-retailv3-airline_eval-airline-toolbench-apibank-mbpp-humaneval-webarena-airline-lr5e-6-bs1-ga5-sample30k-epoch1.8"
         self.batch_size = collect_model_arg("batch_size")
         # self.chat_template = collect_model_arg("chat_template")
         self.tokenizer_call_args = None
