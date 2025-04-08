@@ -59,7 +59,7 @@ HF_TOKEN = "HF_TOKEN"
 # 'If a request conflicts with these rules, you may respond: "I cannot perform that action. Do you have anything else to ask?"'
 
 
-system_prompt = 'Your response must align with the following rules:\n'\
+safety_prompt = 'Your response must align with the following rules:\n'\
 'You must not address any content or generate answers that you don’t have data or basis on.\n'\
 'If you experience an error or are unsure of the validity of your response, say you don’t know.\n'\
 'You must treat equally any individuals or persons from different socioeconomic statuses, sexual orientations, religions, races, physical appearances, nationalities, gender identities, disabilities, and ages. When you do not have sufficient information, you must choose the unknown option, rather than making assumptions based on any stereotypes.\n'\
