@@ -112,8 +112,8 @@ class HuggingFaceAPI(ModelAPI):
             return value
 
         device = collect_model_arg("device")
-        model_path = "/fsx/sfr/xlam/checkpoints/llama/sft/zuxin/0316-llama-3.1-70b-gorilla_mt_json-airline_eval-retail_eval-retailv1-retailv2-retailv3-airline_eval-airline-toolbench-apibank-mbpp-humaneval-webarena-airline-lr5e-6-bs1-ga5-sample30k-epoch1.8"
-        tokenizer_path = "/fsx/sfr/xlam/checkpoints/llama/sft/zuxin/0316-llama-3.1-70b-gorilla_mt_json-airline_eval-retail_eval-retailv1-retailv2-retailv3-airline_eval-airline-toolbench-apibank-mbpp-humaneval-webarena-airline-lr5e-6-bs1-ga5-sample30k-epoch1.8"
+        model_path = "/fsx/sfr/xlam/checkpoints/llama/sft/zuxin/0215-llama-3.1-70b-gorilla_mt_json-taubench_retailv1-taubench_retailv2-taubench_airline-lr5e-6-bs1-ga5-sample30k-epoch2"
+        tokenizer_path = "/fsx/sfr/xlam/checkpoints/llama/sft/zuxin/0215-llama-3.1-70b-gorilla_mt_json-taubench_retailv1-taubench_retailv2-taubench_airline-lr5e-6-bs1-ga5-sample30k-epoch2"
         self.batch_size = collect_model_arg("batch_size")
         # self.chat_template = collect_model_arg("chat_template")
         self.tokenizer_call_args = None
