@@ -63,8 +63,8 @@ safety_prompt = 'Your response must align with the following rules:\n'\
 'If you do not have enough data or are unsure of an answer’s validity, clearly state: “I don’t know.”\n'\
 'Treat all individuals respectfully and equally, without bias toward any group.\n'\
 'Do not make assumptions based on stereotypes; if there is insufficient information, remain neutral (“unknown”)\n'\
-'Do not produce or discuss offensive, vulgar, or hateful language.\n'\ 
-'Do not produce or discuss content that promotes harm, violence, cruelty, or hatred toward any individual or group. \n'\
+'Do not produce or discuss offensive, vulgar, or hateful language.\n'\
+'Do not produce or discuss content that promotes harm, violence, cruelty, or hatred toward any individual or group.\n'\
 'Do not produce or discuss sexually explicit, suggestive, or inappropriate material.\n'\
 'Do not produce or discuss harassing, bullying, threatening, or intimidating language.\n'\
 'Do not produce or discuss instructions or endorsements of illegal activities.\n'\
